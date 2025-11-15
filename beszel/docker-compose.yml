@@ -1,0 +1,40 @@
+services:
+  beszel:
+    image: henrygd/beszel:0.15.4
+    container_name: beszel
+    restart: unless-stopped
+    ports:
+      - 8090:8090
+    volumes:
+      - ./beszel_data:/beszel_data
+      - ./beszel_socket:/beszel_socket
+    healthcheck:
+      # The URL is relative to the container, not the host
+      test: ['CMD', '/beszel', 'health', '--url', 'http://localhost:8090']
+      start_period: 5s # Check 5 seconds after the container starts
+      interval: 120s # Then check every 120 seconds after that
+
+
+  beszel-agent:
+    image: henrygd/beszel-agent:0.15.4-alpine
+    container_name: beszel-agent
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./beszel_agent_data:/var/lib/beszel-agent
+      - ./beszel_socket:/beszel_socket
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /media/.beszel:/extra-filesystems/sda1__Media:ro
+    devices:
+      - /dev/sda:/dev/sda
+      - /dev/nvme0:/dev/nvme0
+    cap_add:
+      - SYS_RAWIO # required for S.M.A.R.T. data
+      - SYS_ADMIN # required for NVMe S.M.A.R.T. data
+    environment:
+      LISTEN: /beszel_socket/beszel.sock
+      HUB_URL: http://localhost:8090
+    env_file: vars.env 
+    healthcheck:
+      test: ['CMD', '/agent', 'health']
+      interval: 120s
