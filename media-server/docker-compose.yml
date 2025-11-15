@@ -1,0 +1,89 @@
+name: htpc
+services:
+  plex:
+    image: plexinc/pms-docker:1.42.2.10156-f737b826c
+    hostname: plex
+    container_name: plex
+    restart: unless-stopped
+    ports:
+      - 32400:32400/tcp
+      - 3005:3005/tcp
+      - 8324:8324/tcp
+      - 32469:32469/tcp
+      - 1900:1900/udp
+      - 32410:32410/udp
+      - 32412:32412/udp
+      - 32413:32413/udp
+      - 32414:32414/udp
+    volumes:
+      - ./config/plex_db:/config
+      - ./config/plex_transcode:/transcode
+      # NAS Drive for content
+      - /media:/data
+    environment:
+      TZ: Asia/Kolkata
+    env_file: ./vars.env # For private variables
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:5.1.2
+    container_name: qbittorrent
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+      - WEBUI_PORT=8080
+      - TORRENTING_PORT=6881
+    volumes:
+      - ./config/qbittorrent/appdata:/config
+      - /media/Downloads:/downloads #optional
+    ports:
+      - 8080:8080
+      - 6881:6881
+      - 6881:6881/udp
+    restart: unless-stopped
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:4.0.16
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - ./config/sonarr/data:/config
+      - /media/TV:/tv #optional
+      - /media/Downloads:/downloads #optional
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:6.1.0-nightly
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - ./config/radarr/data:/config
+      - /media/Movies:/movies #optional
+      - /media/Downloads:/downloads #optional
+    ports:
+      - 7878:7878
+    restart: unless-stopped
+
+  jackett:
+    image: lscr.io/linuxserver/jackett:0.24.270
+    container_name: jackett
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+      - AUTO_UPDATE=true #optional
+      # - RUN_OPTS= #optional
+    volumes:
+      - ./config/jackett/data:/config
+      - /media/Downloads:/downloads
+    ports:
+      - 9117:9117
+    restart: unless-stopped
