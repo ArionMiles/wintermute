@@ -34,7 +34,7 @@ services:
     environment:
       LISTEN: /beszel_socket/beszel.sock
       HUB_URL: http://localhost:8090
-    env_file: vars.env 
+    env_file: vars.env # For private variables 
     healthcheck:
       test: ['CMD', '/agent', 'health']
       interval: 120s
