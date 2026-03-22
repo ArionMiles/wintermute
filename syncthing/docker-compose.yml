@@ -1,0 +1,21 @@
+services:
+  syncthing:
+    image: lscr.io/linuxserver/syncthing:2.0.15
+    container_name: syncthing
+    hostname: wintermute
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - syncthing-config:/config          # syncthing config & state
+      - /home/arion/sync:/data         # vault storage
+    ports:
+      - 8384:8384
+      - 22000:22000/tcp
+      - 22000:22000/udp
+      - 21027:21027/udp
+    restart: unless-stopped
+
+volumes:
+  syncthing-config:
