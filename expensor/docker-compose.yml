@@ -1,0 +1,51 @@
+# docker-compose.yml
+#
+# Start: docker compose up -d
+# Open:  http://localhost:8080
+# Then follow the onboarding wizard to connect your email reader.
+#
+# Data (credentials, token, state) is persisted in the expensor_data named volume.
+# To back up or inspect: docker cp $(docker compose ps -q expensor):/app/data ./data-backup
+#
+# Thunderbird users: uncomment the volume under the expensor service and
+# set the path to your Thunderbird profile directory.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: expensor
+      POSTGRES_USER: expensor
+      POSTGRES_PASSWORD: ${EXPENSOR_POSTGRES_PASSWORD:-expensor_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U expensor"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  expensor:
+    image: ghcr.io/arionmiles/expensor:tip
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8081:8080"
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: expensor
+      POSTGRES_USER: expensor
+      POSTGRES_PASSWORD: ${EXPENSOR_POSTGRES_PASSWORD:-expensor_password}
+      POSTGRES_SSLMODE: disable
+      LOG_LEVEL: DEBUG
+#    volumes:
+      # Thunderbird only: uncomment and set path to your Thunderbird profile
+      # - /path/to/Thunderbird/Profiles/your.profile:/thunderbird-profile:ro
+
+volumes:
+  postgres_data:
+  expensor_data:
