@@ -3,5 +3,5 @@ beszel_agent_data/
 beszel_data/
 beszel_socket/
 media-server/config/
-vars.env
+*.env
 stirling-pdf/StirlingPDF/

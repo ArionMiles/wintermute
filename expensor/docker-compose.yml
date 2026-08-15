@@ -1,14 +1,17 @@
 # docker-compose.yml
 #
-# Start: docker compose up -d
-# Open:  http://localhost:8080
-# Then follow the onboarding wizard to connect your email reader.
+# Start:  docker compose up -d
+# Open:   http://localhost:8080
+# Setup:  follow the onboarding wizard to connect Gmail or Thunderbird.
 #
-# Data (credentials, token, state) is persisted in the expensor_data named volume.
-# To back up or inspect: docker cp $(docker compose ps -q expensor):/app/data ./data-backup
+# Set a custom database password with either:
+#   EXPENSOR_POSTGRES_PASSWORD='change-me' docker compose up -d
+# or a .env file next to this compose file:
+#   EXPENSOR_POSTGRES_PASSWORD=change-me
 #
-# Thunderbird users: uncomment the volume under the expensor service and
-# set the path to your Thunderbird profile directory.
+# Generate an encryption key with OpenSSL:
+#   openssl rand -base64 32
+# and set EXPENSOR_SECRET_KEY in your shell or .env file before starting.
 
 services:
   postgres:
@@ -27,7 +30,7 @@ services:
       retries: 5
 
   expensor:
-    image: ghcr.io/arionmiles/expensor:tip
+    image: ghcr.io/arionmiles/expensor:latest
     restart: unless-stopped
     depends_on:
       postgres:
@@ -35,17 +38,27 @@ services:
     ports:
       - "8081:8080"
     environment:
+      EXPENSOR_DB_BACKEND: postgres
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
       POSTGRES_DB: expensor
       POSTGRES_USER: expensor
       POSTGRES_PASSWORD: ${EXPENSOR_POSTGRES_PASSWORD:-expensor_password}
       POSTGRES_SSLMODE: disable
-      LOG_LEVEL: DEBUG
-#    volumes:
-      # Thunderbird only: uncomment and set path to your Thunderbird profile
-      # - /path/to/Thunderbird/Profiles/your.profile:/thunderbird-profile:ro
+      EXPENSOR_SECRET_KEY: ${EXPENSOR_SECRET_KEY:?set EXPENSOR_SECRET_KEY with openssl rand -base64 32}
+      LOG_LEVEL: INFO
+      # BASE_URL: http://localhost:8080  # Public URL Expensor is reachable at. Change this if you
+      #                                  # expose on a different port (e.g. 8081:8080 -> http://localhost:8081)
+      #                                  # or behind a domain/reverse proxy. Must match the redirect URI
+      #                                  # registered in your Google Cloud Console OAuth client.
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/api/health >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    # Thunderbird only: uncomment the block below and set path to your profile.
+    # volumes:
+    #   - /path/to/Thunderbird/Profiles/your.profile:/thunderbird-profile:ro
 
 volumes:
   postgres_data:
-  expensor_data:
