@@ -10,3 +10,5 @@
 | ZNC          | 2020       |
 | Beszel       | 8090       |
 
+FlareSolverr is available only to containers in the media-server Compose network.
+Configure Jackett's **FlareSolverr API URL** as `http://flaresolverr:8191`.
