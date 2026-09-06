@@ -24,6 +24,26 @@ services:
       TZ: Asia/Kolkata
     env_file: ./vars.env # For private variables
 
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    hostname: jellyfin
+    container_name: jellyfin
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - ./config/jellyfin/data:/config
+      # Jellyfin only needs read access; Sonarr and Radarr manage the library.
+      - /media:/data:ro
+    # Expose the Intel iGPU for Quick Sync/VA-API hardware transcoding.
+    devices:
+      - /dev/dri:/dev/dri
+    ports:
+      - 8096:8096
+      - 7359:7359/udp
+    restart: unless-stopped
+
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
@@ -35,7 +55,12 @@ services:
       - TORRENTING_PORT=6881
     volumes:
       - ./config/qbittorrent/appdata:/config
-      - /media/Downloads:/downloads #optional
+      # A common /data mount keeps download and library paths consistent across
+      # qBittorrent, Sonarr, and Radarr and permits hardlinks when the host
+      # directories are on the same filesystem.
+      - /media:/data
+      # Compatibility alias for torrents created before the /data migration.
+      - /media/Downloads:/downloads
     ports:
       - 8080:8080
       - 6881:6881
@@ -43,7 +68,7 @@ services:
     restart: unless-stopped
 
   sonarr:
-    image: lscr.io/linuxserver/sonarr:4.0.16
+    image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
     environment:
       - PUID=1000
@@ -51,14 +76,16 @@ services:
       - TZ=Asia/Kolkata
     volumes:
       - ./config/sonarr/data:/config
-      - /media/TV:/tv #optional
-      - /media/Downloads:/downloads #optional
+      - /media:/data
+      # Compatibility aliases for existing queues and root folders.
+      - /media/Downloads:/downloads
+      - /media/TV:/tv
     ports:
       - 8989:8989
     restart: unless-stopped
 
   radarr:
-    image: lscr.io/linuxserver/radarr:6.1.0-nightly
+    image: lscr.io/linuxserver/radarr:latest
     container_name: radarr
     environment:
       - PUID=1000
@@ -66,10 +93,47 @@ services:
       - TZ=Asia/Kolkata
     volumes:
       - ./config/radarr/data:/config
-      - /media/Movies:/movies #optional
-      - /media/Downloads:/downloads #optional
+      - /media:/data
+      # Compatibility aliases for existing queues and root folders.
+      - /media/Downloads:/downloads
+      - /media/Movies:/movies
     ports:
       - 7878:7878
+    restart: unless-stopped
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - ./config/prowlarr/data:/config
+    ports:
+      - 9696:9696
+    restart: unless-stopped
+
+  seerr:
+    image: ghcr.io/seerr-team/seerr:latest
+    init: true
+    container_name: seerr
+    environment:
+      - LOG_LEVEL=info
+      - TZ=Asia/Kolkata
+      - PORT=5055
+    volumes:
+      - ./config/seerr/data:/app/config
+    ports:
+      - 5055:5055
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - wget --no-verbose --tries=1 --spider http://localhost:5055/api/v1/settings/public || exit 1
+      start_period: 20s
+      timeout: 3s
+      interval: 15s
+      retries: 3
     restart: unless-stopped
 
   flaresolverr:
@@ -81,7 +145,7 @@ services:
       - CAPTCHA_SOLVER=none
       - TZ=Asia/Kolkata
     # FlareSolverr has no authentication. Keep it private to this Compose network;
-    # Jackett reaches it at http://flaresolverr:8191.
+    # Prowlarr or Jackett can reach it at http://flaresolverr:8191.
     expose:
       - 8191
     healthcheck:
