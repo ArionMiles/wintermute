@@ -97,19 +97,26 @@ seed limits configured in qBittorrent.
 
 ## Existing installations
 
-The old container paths (`/downloads`, `/tv`, and `/movies`) remain mounted as
-compatibility aliases, so recreating the containers does not strand active
-torrents or existing root folders. Migrate in stages:
+The old `/downloads` container path has been retired from the stack. qBittorrent
+and both media managers now use `/data/Downloads`; verify that no active or
+seeding torrent still refers to `/downloads` before deploying this version.
+
+The old library paths (`/tv` and `/movies`) remain mounted as compatibility
+aliases for existing root folders. Migrate those roots in stages:
 
 1. Back up the `media-server/config` directory and pause new grabs.
-2. Recreate the stack, then set qBittorrent's default and category paths to the
-   new `/data/Downloads` paths. Existing torrents may continue using
-   `/downloads`; use qBittorrent's **Set location** if you want to update them.
-3. Add `/data/TV` and `/data/Movies` as root folders. Use Sonarr's series editor
+2. Set qBittorrent's default and category paths to the exact-case
+   `/data/Downloads` paths and finish or relocate any torrent that still uses
+   `/downloads`.
+3. Recreate the affected containers with
+   `docker compose up -d --force-recreate qbittorrent sonarr radarr jackett`.
+   Verify afterward that qBittorrent retained the exact-case default and
+   category paths.
+4. Add `/data/TV` and `/data/Movies` as root folders. Use Sonarr's series editor
    and Radarr's movie editor to change existing entries to the new roots. Do not
    ask the apps to move files: the old and new paths point at the same host data.
-4. Resume grabs and verify that a completed TV and movie download each imports.
+5. Resume grabs and verify that a completed TV and movie download each imports.
 
 The host directories and files remain in the same `/media` locations throughout.
-The legacy aliases can be removed from Compose later, after no queue, history
-entry, or library root refers to them.
+The remaining `/tv` and `/movies` aliases can be removed from Compose later,
+after no library root refers to them.

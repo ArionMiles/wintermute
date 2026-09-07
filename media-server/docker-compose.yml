@@ -59,8 +59,6 @@ services:
       # qBittorrent, Sonarr, and Radarr and permits hardlinks when the host
       # directories are on the same filesystem.
       - /media:/data
-      # Compatibility alias for torrents created before the /data migration.
-      - /media/Downloads:/downloads
     ports:
       - 8080:8080
       - 6881:6881
@@ -77,8 +75,7 @@ services:
     volumes:
       - ./config/sonarr/data:/config
       - /media:/data
-      # Compatibility aliases for existing queues and root folders.
-      - /media/Downloads:/downloads
+      # Compatibility alias for existing library root folders.
       - /media/TV:/tv
     ports:
       - 8989:8989
@@ -94,8 +91,7 @@ services:
     volumes:
       - ./config/radarr/data:/config
       - /media:/data
-      # Compatibility aliases for existing queues and root folders.
-      - /media/Downloads:/downloads
+      # Compatibility alias for existing library root folders.
       - /media/Movies:/movies
     ports:
       - 7878:7878
@@ -171,7 +167,6 @@ services:
       # - RUN_OPTS= #optional
     volumes:
       - ./config/jackett/data:/config
-      - /media/Downloads:/downloads
     ports:
       - 9117:9117
     depends_on:
