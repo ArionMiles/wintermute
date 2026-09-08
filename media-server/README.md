@@ -1,9 +1,10 @@
 # Media server
 
 This Compose project runs Plex and Jellyfin side by side over the same media
-library. Requests entered in Seerr flow through Sonarr or Radarr, which use
-Prowlarr's indexers and send downloads to qBittorrent. Sonarr and Radarr then
-import completed downloads into the appropriate library.
+library. Tunarr turns library media into custom linear channels that appear in
+Jellyfin's Live TV section. Requests entered in Seerr flow through Sonarr or
+Radarr, which use Prowlarr's indexers and send downloads to qBittorrent. Sonarr
+and Radarr then import completed downloads into the appropriate library.
 
 ```text
 Seerr -> Sonarr/Radarr -> Prowlarr (search)
@@ -13,6 +14,8 @@ Seerr -> Sonarr/Radarr -> Prowlarr (search)
                    +<---- completed -------+
                    |
                    +-> /data/TV or /data/Movies -> Plex/Jellyfin
+
+Jellyfin library -> Tunarr schedule -> Jellyfin Live TV
 ```
 
 ## Start the stack
@@ -37,6 +40,8 @@ cd media-server
 test -e vars.env || cp vars.env.example vars.env
 mkdir -p config/seerr/data
 sudo chown 1000:1000 config/seerr/data
+sudo mkdir -p config/tunarr/data
+sudo chown 1000:1000 config/tunarr/data
 docker compose pull
 docker compose up -d
 ```
@@ -73,12 +78,25 @@ another.
    Transcoding**, select **Intel Quick Sync (QSV)** and use
    `/dev/dri/renderD128` as the device. Only enable codecs supported by the
    server's Intel generation.
-6. Open Seerr at `http://SERVER_IP:5055`. In the setup wizard, choose Jellyfin,
+6. Open Tunarr at `http://SERVER_IP:8000`. In its initial setup, add Jellyfin as
+   a media source using `http://jellyfin:8096` and an API key created under
+   Jellyfin's **Dashboard -> Advanced -> API Keys**. Create a channel, add *The
+   Twilight Zone* with **Add Series**, and choose chronological or shuffled
+   scheduling. Create a transcode configuration using HLS and VA-API with
+   `/dev/dri/renderD128`, then assign it to the channel. Tunarr currently
+   recommends VA-API over Quick Sync for Intel GPUs on Linux.
+7. In Jellyfin, open **Dashboard -> Live TV**, add an **HDHomeRun** tuner
+   manually at `http://tunarr:8000`, then add an **XMLTV** guide provider using
+   `http://tunarr:8000/api/xmltv.xml`. After the guide refresh completes, the
+   custom channel appears in Jellyfin's Live TV section. Tunarr's documentation
+   recommends HDHomeRun rather than M3U for Jellyfin because some users see
+   playback instability at program boundaries with M3U.
+8. Open Seerr at `http://SERVER_IP:5055`. In the setup wizard, choose Jellyfin,
    sign in with the Jellyfin administrator, and use `http://jellyfin:8096` as
    the internal URL. Use the browser-accessible Jellyfin URL as the external
    URL and select the Jellyfin libraries to scan. Plex can also be connected
    later from Seerr's media-server settings.
-7. In Seerr's **Settings -> Services**, add Sonarr with hostname `sonarr`, port
+9. In Seerr's **Settings -> Services**, add Sonarr with hostname `sonarr`, port
    `8989`, SSL disabled, and its API key; add Radarr with hostname `radarr`, port
    `7878`, SSL disabled, and its API key. Mark each as the **Default** server and
    select its quality profile, `/data/TV` or `/data/Movies` root folder, and all

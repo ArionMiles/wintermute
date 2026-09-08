@@ -4,6 +4,7 @@
 |--------------|------------|
 | Plex         | 32400      |
 | Jellyfin     | 8096       |
+| Tunarr       | 8000       |
 | qBittorrent  | 8080       |
 | Sonarr       | 8989       |
 | Radarr       | 7878       |

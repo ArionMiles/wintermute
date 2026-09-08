@@ -44,6 +44,24 @@ services:
       - 7359:7359/udp
     restart: unless-stopped
 
+  tunarr:
+    image: ghcr.io/chrisbenincasa/tunarr:latest
+    container_name: tunarr
+    environment:
+      - TUNARR_LOG_LEVEL=info
+      - TZ=Asia/Kolkata
+    volumes:
+      - ./config/tunarr/data:/config/tunarr
+      # Use the same path as Jellyfin so Tunarr can stream library files
+      # directly without path replacement rules.
+      - /media:/data:ro
+    # Expose the Intel iGPU for VA-API/Quick Sync channel transcoding.
+    devices:
+      - /dev/dri:/dev/dri
+    ports:
+      - 8000:8000
+    restart: unless-stopped
+
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
