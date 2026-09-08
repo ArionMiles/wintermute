@@ -93,8 +93,6 @@ services:
     volumes:
       - ./config/sonarr/data:/config
       - /media:/data
-      # Compatibility alias for existing library root folders.
-      - /media/TV:/tv
     ports:
       - 8989:8989
     restart: unless-stopped
@@ -109,8 +107,6 @@ services:
     volumes:
       - ./config/radarr/data:/config
       - /media:/data
-      # Compatibility alias for existing library root folders.
-      - /media/Movies:/movies
     ports:
       - 7878:7878
     restart: unless-stopped

@@ -93,16 +93,22 @@ another.
    playback instability at program boundaries with M3U.
 8. Open Seerr at `http://SERVER_IP:5055`. In the setup wizard, choose Jellyfin,
    sign in with the Jellyfin administrator, and use `http://jellyfin:8096` as
-   the internal URL. Use the browser-accessible Jellyfin URL as the external
-   URL and select the Jellyfin libraries to scan. Plex can also be connected
-   later from Seerr's media-server settings.
+   the internal URL. Set the external URL to the browser-accessible address,
+   such as `http://SERVER_IP:8096`, and select the Jellyfin libraries to scan.
+   Seerr uses the internal address for API calls and the external address for
+   **Play on Jellyfin** links. Plex can also be connected later from Seerr's
+   media-server settings.
 9. In Seerr's **Settings -> Services**, add Sonarr with hostname `sonarr`, port
    `8989`, SSL disabled, and its API key; add Radarr with hostname `radarr`, port
-   `7878`, SSL disabled, and its API key. Mark each as the **Default** server and
-   select its quality profile, `/data/TV` or `/data/Movies` root folder, and all
-   other required defaults such as minimum availability. Enable automatic search
-   so approved requests immediately start searching, and enable scanning so
-   Seerr recognizes existing or already-requested media.
+   `7878`, SSL disabled, and its API key. Set their external URLs to
+   `http://SERVER_IP:8989` and `http://SERVER_IP:7878`, respectively. These
+   external URLs are used only for browser-facing **Open in Sonarr/Radarr**
+   links; Seerr continues to use the Compose service names for API calls. Mark
+   each as the **Default** server and select its quality profile, `/data/TV` or
+   `/data/Movies` root folder, and all other required defaults such as minimum
+   availability. Enable automatic search so approved requests immediately start
+   searching, and enable scanning so Seerr recognizes existing or
+   already-requested media.
 
 After this setup, a request in Seerr triggers the appropriate manager,
 which searches Prowlarr, sends a release to qBittorrent, and imports it after
@@ -112,29 +118,3 @@ requires Downloads, Movies, and TV to be on the same underlying host filesystem;
 compare `stat -c '%d'` for those directories on the Linux host. If their device
 IDs differ, imports use copies instead. Downloads are removed according to the
 seed limits configured in qBittorrent.
-
-## Existing installations
-
-The old `/downloads` container path has been retired from the stack. qBittorrent
-and both media managers now use `/data/Downloads`; verify that no active or
-seeding torrent still refers to `/downloads` before deploying this version.
-
-The old library paths (`/tv` and `/movies`) remain mounted as compatibility
-aliases for existing root folders. Migrate those roots in stages:
-
-1. Back up the `media-server/config` directory and pause new grabs.
-2. Set qBittorrent's default and category paths to the exact-case
-   `/data/Downloads` paths and finish or relocate any torrent that still uses
-   `/downloads`.
-3. Recreate the affected containers with
-   `docker compose up -d --force-recreate qbittorrent sonarr radarr jackett`.
-   Verify afterward that qBittorrent retained the exact-case default and
-   category paths.
-4. Add `/data/TV` and `/data/Movies` as root folders. Use Sonarr's series editor
-   and Radarr's movie editor to change existing entries to the new roots. Do not
-   ask the apps to move files: the old and new paths point at the same host data.
-5. Resume grabs and verify that a completed TV and movie download each imports.
-
-The host directories and files remain in the same `/media` locations throughout.
-The remaining `/tv` and `/movies` aliases can be removed from Compose later,
-after no library root refers to them.
