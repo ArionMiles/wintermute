@@ -75,6 +75,15 @@ permitted. Do not copy the broad CSP example from the upstream project.
   the upstream login styles hide.
 - `saved.css` is not deployed.
 - Inherited trailing whitespace was normalized without changing CSS behavior.
+- `titlepage/title_simple.css` uses the pre-Jellyfin-12 layout so the later
+  upstream v12 positioning rules do not shift unrelated 10.11 pages.
+- `progress/floating.css` gives the progress fill an explicit height and
+  stacking order, addressing upstream issue
+  [#128](https://github.com/CTalvio/Ultrachromic/issues/128).
+- The pinned `fixes.css` already contains upstream's Jellyfin 10.11 detail-page
+  selector update. Serving this local snapshot also avoids the stale CDN mix
+  consistent with the doubled synopsis offset reported in upstream issue
+  [#122](https://github.com/CTalvio/Ultrachromic/issues/122).
 
 The remaining CSS and PNG came from the pinned commit above. No automated
 update mechanism is used. Review and vendor a new commit explicitly before

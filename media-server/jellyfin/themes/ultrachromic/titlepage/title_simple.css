@@ -1,44 +1,24 @@
-/* Tweak series/movie/album title screen */
-
-/* Keep preferred content widths */
+/* Tweak series/movie/album title screen for Jellyfin 10.11. */
 .detailSectionContent {
-    max-width: 66em;
+  max-width: 66em;
 }
-
 .trackSelections {
-    max-width: 22em;
+  max-width: 22em;
 }
-
-/* Intentionally hide the logo */
 .detailLogo {
-    display: none;
+  display: none;
 }
-
-/* Transparent backgrounds */
 .detailPagePrimaryContainer {
-    background: rgba(0,0,0,0) !important;
+  background: rgba(0,0,0,0) !important;
 }
-
 .layout-desktop .detailRibbon {
-    background: rgba(0,0,0,0) !important;
+  background: rgba(0,0,0,0) !important;
 }
-
-/* Remove the huge empty space above poster + text */
-.itemBackdrop {
-    display: none !important;
-}
-
-.layout-desktop .pageContainer,
-.layout-desktop .mainDetailPage,
-.layout-desktop .detailPageWrapper,
-.layout-desktop #itemDetailPage,
-.layout-desktop .contentContainer,
-.layout-desktop .viewContainer,
-.layout-desktop .sectionContainer {
-    margin-top: 15vh !important;
-}
-
-.layout-desktop .detailImageContainer .card {
-    transform: translate(35px, -165px) scale(1) !important;
-    transform-origin: top left;
+@media all and (min-width: 32em){
+  .itemBackdrop {
+    display: none;
+  }
+  .layout-desktop .detailRibbon {
+    margin-top: 13vh;
+  }
 }

@@ -16,14 +16,26 @@
 #indexPage .itemProgressBarForeground,
 .libraryPage .itemProgressBarForeground,
 #itemDetailPage .itemProgressBarForeground  {
-    background-color: rgba(var(--accent), 0.95) !important;
+    background-color: rgba(var(--accent, 0, 164, 220), 0.95) !important;
 }
 #indexPage .itemProgressBar,
 .libraryPage .itemProgressBar,
 #itemDetailPage .itemProgressBar {
-    height: 6px;
+    position: relative !important;
+    height: 6px !important;
+    overflow: hidden;
     background: rgba(0,0,0,0.4);
     margin: .5em .8em;
+}
+
+/* Jellyfin 10.11: keep the absolutely positioned fill visible. */
+#indexPage .itemProgressBarForeground,
+.libraryPage .itemProgressBarForeground,
+#itemDetailPage .itemProgressBarForeground {
+    display: block !important;
+    height: 100% !important;
+    min-height: 6px;
+    z-index: 1;
 }
 /*Accommodate play button on mobile*/
 @media all and (max-width: 100em){
@@ -37,7 +49,6 @@
   #indexPage .itemProgressBar,
   .libraryPage .itemProgressBar,
   #itemDetailPage .itemProgressBar{
-    backdrop-filter: blur(4px);
     background: rgba(0, 0, 0, 0.35) !important;
   }
 }

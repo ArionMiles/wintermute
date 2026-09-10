@@ -2,3 +2,4 @@ upstream_repository=https://github.com/CTalvio/Ultrachromic
 upstream_commit=136760012e62b2f5712808febc377b04386d581b
 upstream_tree=daabbd0ec929ec65789c02c923f068eb4b0b658b
 reviewed=2026-09-10
+target_jellyfin=10.11.11
