@@ -1,0 +1,11 @@
+#itemDetailPage .itemProgressBar,
+#indexPage .itemProgressBar{
+    height: 5px;
+    background: rgba(0, 0, 0, 0.45);
+}
+.itemProgressBarForeground {
+    background-color: rgba(var(--accent),0.75);
+}
+.transcodingProgress > div {
+    background-color: rgba(var(--accent), 0.35);
+}

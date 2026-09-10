@@ -1,0 +1,14 @@
+/*Alternate itempage*/
+
+.itemBackdrop {
+  height: 31vh !important;
+  display: inherit;
+}
+.detailLogo {
+  display: none;
+}
+.layout-desktop .detailRibbon {
+  margin-top: 0;
+  padding-top: .5em;
+  padding-bottom: .5em;
+}

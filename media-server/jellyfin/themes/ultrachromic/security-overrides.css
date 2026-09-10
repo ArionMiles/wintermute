@@ -1,0 +1,4 @@
+/* Keep account-recovery UI available; upstream login styles hide this button. */
+#loginPage .raised.cancel.block.btnForgotPassword.emby-button {
+  display: block;
+}

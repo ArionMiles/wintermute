@@ -98,6 +98,18 @@ another.
    - Create its administrator account.
    - Create libraries pointing at `/data/TV` and `/data/Movies`.
      Jellyfin's media mount is read-only by design.
+   - To enable the locally hosted Ultrachromic theme, open
+     **Dashboard -> Branding**, put one of the following lines in
+     **Custom CSS**, and save. Monochromic is the suggested starting point:
+
+     ```css
+     @import url('/web/custom-themes/ultrachromic/presets/monochromic_preset.css');
+     ```
+
+     The other available entry points are `kaleidochromic_preset.css` and
+     `novachromic_preset.css` in the same URL directory. The theme source and
+     verification details are documented in
+     [`jellyfin/themes/ultrachromic/README.md`](jellyfin/themes/ultrachromic/README.md).
    - Under **Dashboard -> Playback -> Transcoding**:
      - Select **Intel Quick Sync (QSV)**.
      - Use `/dev/dri/renderD128` as the device.

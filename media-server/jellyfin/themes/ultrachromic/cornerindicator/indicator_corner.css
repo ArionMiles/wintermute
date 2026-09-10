@@ -1,0 +1,31 @@
+/*Card indicators style corner*/
+
+.cardIndicators,
+.listItemIndicators {
+  right: 0 !important;
+  top: 0 !important;
+}
+.innerCardFooter {
+  border-radius: 0px var(--rounding) !important;
+  box-shadow: 1px -1px 4px 0 rgba(0,0,0,0.3);
+}
+.countIndicator, .playedIndicator {
+  border-radius: 0px var(--rounding) !important;
+  box-shadow: -1px 1px 4px 0 rgba(0,0,0,0.3);
+}
+.countIndicator {
+  background: rgba(var(--indicator),0.8);
+}
+.playedIndicator, .innerCardFooter {
+  background: rgba(0,0,0,0.4)
+}
+
+.mediaSourceIndicator {
+  left: 0;
+  top: 0;
+}
+.mediaSourceIndicator {
+  border-radius: var(--rounding) 0px !important;
+  box-shadow: 1px 1px 4px 0 rgba(0,0,0,0.3);
+  background: rgba(0,0,0,0.4)
+}

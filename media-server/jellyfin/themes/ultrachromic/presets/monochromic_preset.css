@@ -1,0 +1,21 @@
+@import url('../jf_font.css');
+@import url('../fixes.css');
+@import url('../base.css');
+@import url('../rounding.css');
+@import url('../smallercast.css');
+@import url('../episodelist/episodes_compactlist.css');
+@import url('../header/header_transparent-dashboard.css');
+@import url('../login/login_minimalistic.css');
+@import url('../fields/fields_border.css');
+@import url('../cornerindicator/indicator_corner.css');
+@import url('../type/dark.css');
+@import url('../titlepage/title_simple.css');
+@import url('../overlayprogress.css');
+@import url('../security-overrides.css');
+
+:root {--rounding: 5px;}
+
+/*Style backdrop*/
+.backdropImage {
+  filter: blur(60px) saturate(200%) contrast(160%) brightness(25%);
+}

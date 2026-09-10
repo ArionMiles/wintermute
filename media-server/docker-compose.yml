@@ -34,6 +34,8 @@ services:
       - TZ=Asia/Kolkata
     volumes:
       - ./config/jellyfin/data:/config
+      # Version-controlled, reviewed themes served by Jellyfin Web.
+      - ./jellyfin/themes:/usr/share/jellyfin/web/custom-themes:ro
       # Jellyfin only needs read access; Sonarr and Radarr manage the library.
       - /media:/data:ro
     # Expose the Intel iGPU for Quick Sync/VA-API hardware transcoding.
