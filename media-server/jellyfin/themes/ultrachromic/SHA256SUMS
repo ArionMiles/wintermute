@@ -1,5 +1,5 @@
 301f2c75f2e5d73ead1591e6fe9717653375cb12b242ba073529dc1396f43781  ./LICENSE
-ededf34f472675ada2225c81fd7e8c9b096687583f039a382c48152533f8c3f9  ./README.md
+417d4f749182362a3f3bbc6f288a07cd0aedea6655701f16a8035e8804d60fb2  ./README.md
 d5e0f47fdd5a4e564c4fa5d408c1c2f7396e00fe3e340ebe887d68146bacad89  ./REVISION
 6bcfdc56685233772aac039aa92a7b3cf8cdd09f2eddad5100547b00be918752  ./WIP.css
 d7af98ccf0a05f22e2df7ae01158864236bac2b526996307d80be7e578792ae7  ./accentlist.css
@@ -8,7 +8,7 @@ a08eb75f339334bf8d423af40e653b656e7f92f4f6ae4534864f1e87a15cc3d7  ./base.css
 f69e370c022ff800be5e1c69bad236dd111e8a439a06a301afd0de64178a0f0f  ./bottombarprogress.css
 58dc26778a0e43d0cebb9eb8a34eabc6658a9bfa5af5810818482a017fe1e5a3  ./cornerindicator/indicator_corner.css
 e0366537da26ab21517ce2646dc34d9312ea8f349123c74dc767718b5f68f39e  ./cornerindicator/indicator_floating.css
-9b50f85a79fe4c6edb08dd39502dd8bb1ad2dea4d0dcdfbce29ee16de840e426  ./effects/glassy.css
+f237fb252b13d4edaf3717ac4122732fdc322b06a0e6365d3dba690e24404733  ./effects/glassy.css
 09c34d4db03023cd495d308fba00ec4428dece549b7d6d51a7cd0c8e0f31bb98  ./effects/hoverglow-pulse.css
 cd8e19b21d9585b34539009214816cbbf32f2a42d217dbcc0dcd64cf6afa200c  ./effects/hoverglow.css
 c861ffed9fee0c892419a7cf74bc5c8af190b14827f33067bacafcfd1432900b  ./effects/pan-animation.css

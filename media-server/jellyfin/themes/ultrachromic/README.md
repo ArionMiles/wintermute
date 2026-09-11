@@ -80,6 +80,10 @@ permitted. Do not copy the broad CSP example from the upstream project.
 - `progress/floating.css` gives the progress fill an explicit height and
   stacking order, addressing upstream issue
   [#128](https://github.com/CTalvio/Ultrachromic/issues/128).
+- `effects/glassy.css` preserves the glass blur without requesting persistent
+  GPU compositing for every affected element. This is intended to mitigate
+  tile-aligned flicker in long-lived, high-resolution Chromium clients while
+  retaining the preset's appearance.
 - The pinned `fixes.css` already contains upstream's Jellyfin 10.11 detail-page
   selector update. Serving this local snapshot also avoids the stale CDN mix
   consistent with the doubled synopsis offset reported in upstream issue

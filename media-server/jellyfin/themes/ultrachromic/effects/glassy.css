@@ -1,19 +1,9 @@
 @supports (backdrop-filter: blur(15px)) {
-  .skinHeader-withBackground,
-  .css-fknfom,
-  .dialog,
-  .mainDrawer,
-  .toast,
-  .appfooter,
-  .paper-icon-button-light:hover,
-  #itemDetailPage .itemProgressBar,
-  #dashboardPage .backgroundProgress > div,
-  .cardOverlayButtonIcon,
-  .indicator {
-    backface-visibility: hidden;
-    transform: translateZ(0);
-    will-change: backdrop-filter;
-  }
+  /*
+   * Avoid requesting persistent compositing for these glass surfaces with
+   * translateZ(0) or will-change. This is intended to mitigate tile-aligned
+   * flicker in long-lived, high-resolution Chromium clients.
+   */
 
   .skinHeader-withBackground,
   .css-fknfom {
